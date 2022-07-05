@@ -1,0 +1,19 @@
+#!/bin/sh
+
+if [ ! -e ca/ca.key ]
+then
+	mkdir -p ca
+
+	tnow=`date +%s`
+
+	days=`expr \( 2147483647 - $tnow \) / 86400`
+
+	openssl genrsa -out ca/ca.key 4096
+
+	openssl req -x509 -new \
+		-key ca/ca.key -config root.conf \
+		-nodes -sha256 -days $days \
+		-out ca/ca.crt
+else
+	echo 'mkroot: delete old ca/ca.key to confirm you wish to proceed'
+fi
